@@ -1,0 +1,59 @@
+@(metas: List[Meta])
+<html>
+	<head>
+		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet" media="screen">
+		<script type="text/javascript" src="@routes.Assets.at("javascripts/angular.min.js")"></script>
+	</head>
+	<body>
+		<div clas="jumbotron">
+			<h1>Why, hello there!</h1>
+		</div>
+		<div class="col-sm-5">
+			@for(meta <- metas) {
+				<div class="container-fluid">
+				<div class="col-sm-5">
+				@if(meta.isCumprida()) {
+					<span>Semana @meta.getSemana() <b>@meta.getDescricao()</b></span>
+				} else {
+					<span>Semana @meta.getSemana() <i>@meta.getDescricao()</i></span>
+				}
+				</div>
+				<div class="pull-right">
+					@if(!meta.isCumprida()) {
+						<form method="post" action="@routes.Application.cumprirMeta()" style="display: inline;">
+							<input type="hidden" name="id" value="@meta.getId()">
+							<button type="submit" id="cumprir1"><span aria-hidden="true">&#10003;</span></button>
+						</form>
+					}
+					<form method="post" id="deleteMeta" action="@routes.Application.deleteMeta()" style="display: inline;">
+						<input type="hidden" name="id" value="@meta.getId()">
+						<button type="submit" id="delete"><span aria-hidden="true">X</span></button>            
+	            	</form>
+				</div>
+				</div>
+			}
+		</div>
+		<div class="col-sm-7">
+			<form method="post" action="@routes.Application.newMeta()" id="novaMeta">
+				<label for="descricao">Descrição da meta:</label>
+				<input type="text" id="descricao" class="form-control" required="required" name="descricao">
+				<label for="semana">Quero que esta meta seja cumprida até daqui a:</label>
+   				<select class="form-control" required="required" id="semana" name="semana" form="novaMeta">
+   					<option value="1">1 semana</option>
+   					<option value="2">2 semanas</option>
+   					<option value="3">3 semanas</option>
+   					<option value="4">4 semanas</option>
+   					<option value="5">5 semanas</option>
+   					<option value="6">6 semanas</option>
+   				</select>
+   				<label for="prioridade">A prioridade desta meta é:</label>
+   				<select class="form-control" required="required" id="prioridade" name="prioridade" form="novaMeta">
+   					<option value="3">Alta</option>
+   					<option value="2">Média</option>
+   					<option value="1">Baixa</option>
+   				</select>
+				<input type="submit" class="btn btn-primary" value="Registrar meta">
+			</form>
+		</div>
+	</body>
+</html>
