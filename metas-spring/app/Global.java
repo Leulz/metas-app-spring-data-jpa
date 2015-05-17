@@ -1,20 +1,28 @@
+import javax.inject.Inject;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import models.Meta;
+import models.MetaRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate3.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
+
 import play.Application;
 import play.GlobalSettings;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  * Application wide behaviour. We establish a Spring application context for the dependency injection system and
  * configure Spring Data.
  */
 public class Global extends GlobalSettings {
+	@Inject
+    MetaRepository metaRepo;
 
     /**
      * The name of the persistence unit we will be using.
@@ -42,6 +50,12 @@ public class Global extends GlobalSettings {
 
         // This will construct the beans and call any construction lifecycle methods e.g. @PostConstruct
         ctx.start();
+        
+        metaRepo = getControllerInstance(MetaRepository.class);
+        
+        Meta meta1 = new Meta("Descobrir a razão da existência.", 1, 3);
+        
+        metaRepo.save(meta1);
     }
 
     /**
